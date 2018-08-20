@@ -1,9 +1,11 @@
 describe("Validate When Create Todo", function () {
 
+    var isUpdate = false;
+
     it('create success', function () {
         todoList = [];
 
-        var result = validate(1, "Cleaning", false, false);
+        var result = validate(1, "Cleaning", false, isUpdate);
 
         expect(result).toBe(true);
     });
@@ -11,7 +13,7 @@ describe("Validate When Create Todo", function () {
     it('create fail by empty content', function () {
         todoList = [];
 
-        var result = validate(1, "", false, false);
+        var result = validate(1, "", false, isUpdate);
 
         expect(result).toBe(false);
     });
@@ -19,7 +21,7 @@ describe("Validate When Create Todo", function () {
     it('create fail by non exist reference', function () {
         todoList = [];
 
-        var result = validate(1, "Cleaning @100", false, false);
+        var result = validate(1, "Cleaning @100", false, isUpdate);
 
         expect(result).toBe(false);
     });
@@ -27,7 +29,7 @@ describe("Validate When Create Todo", function () {
     it('create fail by reference myself', function () {
         todoList = [];
 
-        var result = validate(1, "Cleaning @1", false, false);
+        var result = validate(1, "Cleaning @1", false, isUpdate);
 
         expect(result).toBe(false);
     });
@@ -35,6 +37,8 @@ describe("Validate When Create Todo", function () {
 });
 
 describe("Validate When Modify Todo", function () {
+
+    var isUpdate = true;
 
     it('modify success', function () {
         todoList = [{
@@ -45,7 +49,7 @@ describe("Validate When Modify Todo", function () {
             "complete": false
         }];
 
-        var result = validate(1, "Cleaning-Modify", true, true);
+        var result = validate(1, "Cleaning-Modify", true, isUpdate);
 
         expect(result).toBe(true);
     });
@@ -59,7 +63,7 @@ describe("Validate When Modify Todo", function () {
             "complete": false
         }];
 
-        var result = validate(1, "", false, false);
+        var result = validate(1, "", false, isUpdate);
 
         expect(result).toBe(false);
     });
@@ -73,7 +77,7 @@ describe("Validate When Modify Todo", function () {
             "complete": false
         }];
 
-        var result = validate(1, "Cleaning-Modify @2", false, true);
+        var result = validate(1, "Cleaning-Modify @2", false, isUpdate);
 
         expect(result).toBe(false);
     });
@@ -87,7 +91,7 @@ describe("Validate When Modify Todo", function () {
             "complete": false
         }];
 
-        var result = validate(1, "Cleaning-Modify @1", false, true);
+        var result = validate(1, "Cleaning-Modify @1", false, isUpdate);
 
         expect(result).toBe(false);
     });
@@ -107,7 +111,7 @@ describe("Validate When Modify Todo", function () {
             "complete": false
         }];
 
-        var result = validate(1, "Cleaning-Modify @1", true, true);
+        var result = validate(1, "Cleaning-Modify @1", true, isUpdate);
 
         expect(result).toBe(false);
     });
