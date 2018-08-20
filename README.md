@@ -4,8 +4,11 @@ Todo List
 # Preview
 ![screenshot](./img/project-screenshot.png)
 
-# 개발 환경
-* 서버 : Java (1.8+), Spring Boot Web Application
+# 시스템 요구사항
+* Java 8 또는 그 이상
+
+# 개발 언어
+* 서버 : Java(1.8), Spring Boot Web Application
 * 프론트엔드 : Html, Javascript (with jQuery, Bootstrap, DataTables)
 * 데이터베이스 : Ignite (Local Cache Mode)
 * 유닛테스트 : JUnit, Mockito, Jasmine
