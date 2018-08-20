@@ -12,11 +12,12 @@ Todo List
 
 # REST API
 * JSON format
-<pre><code>{
+```json
+{
   "content" : "할일 내용",
   "complete" : false
 }
-</code></pre>
+```
 
 * **/api/todos/ (GET)**
   * 할일 목록을 모두 조회한다.
@@ -66,13 +67,14 @@ Todo List
 
 # 빌드 및 실행방법
 * Maven Download: https://maven.apache.org/download.cgi
-<pre><code>> git clone https://github.com/crazysense/kakao_exam_todo.git
-> cd kakao_exam_todo
-> git pull origin master
-> mvn clean package [-Dmaven.test.skip=true]
-> cd target
-> java -jar ./todo-0.1.jar [--server.port=9999]
-</code></pre>
+```console
+$ git clone https://github.com/crazysense/exam_todo.git
+$ cd exam_todo
+$ git pull origin master
+$ mvn clean package [-Dmaven.test.skip=true]
+$ cd target
+$ java -jar ./todo-0.1.jar [--server.port=9999]
+```
 
 *실행시 --server.port 옵션을 주지 않으면 기본 8080 포트를 사용.*
 
