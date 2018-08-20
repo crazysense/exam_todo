@@ -69,7 +69,7 @@ Todo List
 <pre><code>> git clone https://github.com/crazysense/kakao_exam_todo.git
 > cd kakao_exam_todo
 > git pull origin master
-> mvn clean package
+> mvn clean package [-Dmaven.test.skip=true]
 > cd target
 > java -jar ./todo-0.1.jar [--server.port=9999]
 </code></pre>
