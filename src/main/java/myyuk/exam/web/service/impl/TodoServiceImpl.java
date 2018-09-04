@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Todo Service Implementation.
@@ -19,12 +21,16 @@ import java.util.List;
 public class TodoServiceImpl implements TodoService {
     private static final Logger logger = LoggerFactory.getLogger(TodoServiceImpl.class);
 
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
     @Autowired
     private TodoStore todoStore;
 
     @Override
     public void createTodo(String content) {
         try {
+            lock.writeLock().lock();
+
             TodoEntry todo = new TodoEntry();
             todo.setContent(content);
             todo.setComplete(false);
@@ -36,30 +42,39 @@ public class TodoServiceImpl implements TodoService {
             todoStore.insert(todo);
         } catch (Exception e) {
             logger.error("Failed to insert: {}", e.getMessage(), e);
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
     @Override
     public void updateTodo(long id, String content, boolean complete) {
-        try {
-            TodoEntry todo = todoStore.getTodoById(id);
-            todo.setContent(content);
-            todo.setComplete(complete);
-            todo.setUpdateTime(Instant.now().toEpochMilli());
+		try {
+			lock.writeLock().lock();
 
-            todoStore.update(todo);
-        } catch (Exception e) {
-            logger.error("Failed to update: {}", e.getMessage(), e);
-        }
+			TodoEntry todo = todoStore.getTodoById(id);
+			todo.setContent(content);
+			todo.setComplete(complete);
+			todo.setUpdateTime(Instant.now().toEpochMilli());
+
+			todoStore.update(todo);
+		} catch (Exception e) {
+			logger.error("Failed to update: {}", e.getMessage(), e);
+		} finally {
+			lock.writeLock().unlock();
+		}
     }
 
     @Override
     public List<TodoEntry> getTodoList() {
         List<TodoEntry> todoList = Lists.newArrayList();
         try {
+            lock.readLock().lock();
             todoList = todoStore.getAllTodos();
         } catch (Exception e) {
             logger.error("Failed to update: {}", e.getMessage(), e);
+        } finally {
+            lock.readLock().unlock();
         }
         return todoList;
     }

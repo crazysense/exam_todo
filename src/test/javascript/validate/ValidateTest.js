@@ -82,7 +82,7 @@ describe("Validate When Modify Todo", function () {
         expect(result).toBe(false);
     });
 
-    it('modify fail fail by reference myself', function () {
+    it('modify fail by reference myself', function () {
         todoList = [{
             "id": 1,
             "content": "Cleaning",
@@ -96,7 +96,7 @@ describe("Validate When Modify Todo", function () {
         expect(result).toBe(false);
     });
 
-    it('modify fail fail by incomplete reference', function () {
+    it('modify fail by incomplete reference', function () {
         todoList = [{
             "id": 1,
             "content": "Cleaning",
@@ -111,7 +111,7 @@ describe("Validate When Modify Todo", function () {
             "complete": false
         }];
 
-        var result = validate(1, "Cleaning-Modify @1", true, isUpdate);
+        var result = validate(1, "Cleaning-Modify", true, isUpdate);
 
         expect(result).toBe(false);
     });

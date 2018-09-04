@@ -84,7 +84,7 @@ $(document).ready(function () {
 
             var id = $("#submitId").val();
             var content = $("#submitContent").val();
-            var complete = $("#submitComplete").val();
+            var complete = $("#submitComplete").val() == 'true';
 
             if (content == "") {
                 alert("할일이 입력되지 않았습니다.");
@@ -199,7 +199,7 @@ function pad(n, width) {
 }
 
 // Validate inputs
-function validate(id, content, complete, isUpdate) {
+function validate(id, content, isComplete, isUpdate) {
     if (content == "") {
         alert("할일이 입력되지 않았습니다.");
         return false;
@@ -239,21 +239,23 @@ function validate(id, content, complete, isUpdate) {
     }
 
     if (isUpdate) {
-        var incompleteReferences = todoList.filter(function (element) {
-            var matches = element.content.match(/@\d+/g);
-            if (matches != undefined) {
-                for (var i = 0; i < matches.length; i++) {
-                    if (matches[i].substring(1) == id && !element.complete) {
-                        return true;
+        if(isComplete) {
+            var incompleteReferences = todoList.filter(function (element) {
+                var matches = element.content.match(/@\d+/g);
+                if (matches != undefined) {
+                    for (var i = 0; i < matches.length; i++) {
+                        if (matches[i].substring(1) == id && !element.complete) {
+                            return true;
+                        }
                     }
                 }
-            }
-            return false;
-        });
+                return false;
+            });
 
-        if (complete && incompleteReferences.length > 0) {
-            alert("완료되지 않은 할일이 존재합니다.");
-            return false;
+            if (incompleteReferences.length > 0) {
+                alert("완료되지 않은 할일이 존재합니다.");
+                return false;
+            }
         }
     }
 

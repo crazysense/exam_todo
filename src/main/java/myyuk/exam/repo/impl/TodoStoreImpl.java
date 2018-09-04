@@ -35,10 +35,7 @@ public class TodoStoreImpl implements TodoStore {
         return ignite.atomicSequence("TODO_SEQ", 0, true);
     }
 
-    /**
-     * Gets an ignite cache for store todo.
-     * @return the cache.
-     */
+    @Bean
     public IgniteCache<Long, TodoEntry> todoCache() {
         return ignite.getOrCreateCache("TODO");
     }
