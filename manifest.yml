@@ -3,5 +3,5 @@ applications:
 - name: exam-todo
   memory: 1G
   random-route: true
-  path: target/todo-0.1.jar
+  path: target/todo-0.2.jar
 
