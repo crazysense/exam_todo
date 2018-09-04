@@ -207,7 +207,6 @@ function validate(id, content, complete) {
 
     var matches = content.match(/@\d+/g);
     if (matches != undefined) {
-        var references = [];
         for (var i = 0; i < matches.length; i++) {
             var compareId = matches[i].substring(1);
             var findElement = undefined;
@@ -221,19 +220,27 @@ function validate(id, content, complete) {
             if (findElement == undefined) {
                 alert("참조할 할일(" + compareId + ")이 목록에 존재하지 않습니다.");
                 return false;
-            }
-
-            references.push(findElement);
-        }
-
-        for (var i = 0; i < references.length; i++) {
-            if (references[i].id == id) {
+            } else if (findElement.id == id) {
                 alert("자기 자신은 참조할 수 없습니다.");
                 return false;
-            }
-            if (references[i].complete) {
-                alert("참조할 할일(" + references[i].id + ")이 이미 완료처리된 상태입니다.");
+            } else if (findElement.complete) {
+                alert("참조할 할일(" + findElement.id + ")이 이미 완료처리된 상태입니다.");
                 return false;
+            }
+
+            // Check cross-reference
+            var refMatches = findElement.content.match(/@\d+/g);
+            console.log("matches : " + refMatches);
+            if (refMatches != undefined) {
+                for (var i = 0; i < refMatches.length; i++) {
+                    var crossCompareId = refMatches[i].substring(1);
+                    console.log("compareId : " + crossCompareId);
+                    if (crossCompareId == id) {
+                        console.log("cross-ref: " + findElement.id);
+                        alert("참조한 할일(" + findElement.id + ")과 상호 참조될 수 없습니다.");
+                        return false;
+                    }
+                }
             }
         }
     }

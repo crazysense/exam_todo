@@ -112,4 +112,24 @@ describe("Validate When Modify Todo", function () {
         expect(result).toBe(false);
     });
 
+    it('modify fail by cross-reference', function () {
+        todoList = [{
+            "id": 1,
+            "content": "Cleaning",
+            "createTime": 1534733102684,
+            "updateTime": 1534733102684,
+            "complete": false
+        }, {
+            "id": 2,
+            "content": "Washing @1",
+            "createTime": 1534733105152,
+            "updateTime": 1534733105152,
+            "complete": false
+        }];
+
+        var result = validate(1, "Cleaning-Modify @2", true);
+
+        expect(result).toBe(false);
+    })
+
 });
