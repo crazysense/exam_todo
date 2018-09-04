@@ -230,13 +230,9 @@ function validate(id, content, complete) {
 
             // Check cross-reference
             var refMatches = findElement.content.match(/@\d+/g);
-            console.log("matches : " + refMatches);
             if (refMatches != undefined) {
                 for (var i = 0; i < refMatches.length; i++) {
-                    var crossCompareId = refMatches[i].substring(1);
-                    console.log("compareId : " + crossCompareId);
-                    if (crossCompareId == id) {
-                        console.log("cross-ref: " + findElement.id);
+                    if (refMatches[i].substring(1) == id) {
                         alert("참조한 할일(" + findElement.id + ")과 상호 참조될 수 없습니다.");
                         return false;
                     }
