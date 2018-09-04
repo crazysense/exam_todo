@@ -91,7 +91,7 @@ $(document).ready(function () {
                 return;
             }
 
-            if (validate(id, content, complete, true)) {
+            if (validate(id, content, complete)) {
                 ajaxPut(id, content, complete);
                 $('#modifyWindow').modal('toggle');
                 initEvents();
@@ -108,7 +108,7 @@ $(document).ready(function () {
                 return;
             }
 
-            if (validate(-1, content, false, false)) {
+            if (validate(-1, content, false)) {
                 ajaxPost(content, false);
                 initEvents();
             }
@@ -199,7 +199,7 @@ function pad(n, width) {
 }
 
 // Validate inputs
-function validate(id, content, isComplete, isUpdate) {
+function validate(id, content, complete) {
     if (content == "") {
         alert("할일이 입력되지 않았습니다.");
         return false;
@@ -207,54 +207,47 @@ function validate(id, content, isComplete, isUpdate) {
 
     var matches = content.match(/@\d+/g);
     if (matches != undefined) {
-        var references = todoList.filter(function (element) {
-            for (var i = 0; i < matches.length; i++) {
-                if (matches[i].substring(1) == element.id) {
-                    return true;
+        var references = [];
+        for (var i = 0; i < matches.length; i++) {
+            var compareId = matches[i].substring(1);
+            var findElement = undefined;
+            for (var j = 0; j < todoList.length; j++) {
+                if (compareId == todoList[j].id) {
+                    findElement = todoList[j];
+                    break;
                 }
             }
-            return false;
-        });
 
-        if (references.length == 0) {
-            alert("참조할 할일이 목록에 존재하지 않습니다.");
-            return false;
+            if (findElement == undefined) {
+                alert("참조할 할일(" + compareId + ")이 목록에 존재하지 않습니다.");
+                return false;
+            }
+
+            references.push(findElement);
         }
 
-        if (id > 0) {
-            if (references.filter(function (reference) {
-                return reference.id == id;
-            }).length > 0) {
+        for (var i = 0; i < references.length; i++) {
+            if (references[i].id == id) {
                 alert("자기 자신은 참조할 수 없습니다.");
                 return false;
             }
-        }
-
-        if (references.filter(function (reference) {
-            return reference.complete;
-        }).length > 0) {
-            alert("참조할 할일이 이미 완료처리된 상태입니다.");
-            return false;
+            if (references[i].complete) {
+                alert("참조할 할일(" + references[i].id + ")이 이미 완료처리된 상태입니다.");
+                return false;
+            }
         }
     }
 
-    if (isUpdate) {
-        if(isComplete) {
-            var incompleteReferences = todoList.filter(function (element) {
-                var matches = element.content.match(/@\d+/g);
-                if (matches != undefined) {
-                    for (var i = 0; i < matches.length; i++) {
-                        if (matches[i].substring(1) == id && !element.complete) {
-                            return true;
-                        }
+    if (complete) {
+        for (var i = 0; i < todoList.length; i++) {
+            var matches = todoList[i].content.match(/@\d+/g);
+            if (matches != undefined) {
+                for (var j = 0; j < matches.length; j++) {
+                    if (matches[j].substring(1) == id && !todoList[i].complete) {
+                        alert("완료되지 않은 할일(" + todoList[i].id + ")이 존재합니다.");
+                        return false;
                     }
                 }
-                return false;
-            });
-
-            if (incompleteReferences.length > 0) {
-                alert("완료되지 않은 할일이 존재합니다.");
-                return false;
             }
         }
     }
